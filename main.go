@@ -67,7 +67,7 @@ func parseCard(s string) card {
 func findMaxhand(cards []card) []card {
 	hand := make([]card, 5)
 	maxHand := make([]card, 5)
-	bestRank := 10000
+	bestRank := 100000
 	for _, combo := range perm7 {
 		for i, cardIndex := range combo {
 			hand[i] = cards[cardIndex]
@@ -75,7 +75,7 @@ func findMaxhand(cards []card) []card {
 		r := rankHand(hand)
 		if r < bestRank {
 			bestRank = r
-			maxHand = hand
+			copy(maxHand, hand)
 		}
 	}
 	return maxHand
@@ -114,7 +114,7 @@ func main() {
 		dealtBoard := append(board, deck[0:5-len(board)]...)
 
 		maxhand1 := findMaxhand(append(hand1, dealtBoard...))
-		maxhand2 := findMaxhand(append(hand1, dealtBoard...))
+		maxhand2 := findMaxhand(append(hand2, dealtBoard...))
 
 		won := compare(maxhand1, maxhand2)
 		if won > 0 {

@@ -16,10 +16,10 @@ var (
 	steelwheel = []card{card{rank: 12, suit: 0}, card{rank: 0, suit: 0}, card{rank: 1, suit: 0}, card{rank: 2, suit: 0}, card{rank: 3, suit: 0}}
 )
 
-func TestRankStrFlush(t *testing.T) {
-	t.Logf("Testing rank of %v", strflush)
-	if res := rankHand(strflush); res != 1 {
-		t.Errorf("Expected value of 1, but was %d instead.", res)
+func TestRankStraight(t *testing.T) {
+	t.Logf("Testing rank of %v", straight)
+	if res := rankHand(straight); res != 1600 {
+		t.Errorf("Expected value of 1600, but was %d instead.", res)
 	}
 }
 
