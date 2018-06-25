@@ -1,4 +1,6 @@
-package main
+package eval
+
+import "github.com/johannm/pokereq/deck"
 
 const STRAIGHT_FLUSH = 1
 const FOUR_OF_A_KIND = 2
@@ -116,20 +118,20 @@ func eval_5hand(hand []uint32) uint16 {
 	return eval_5cards(c1, c2, c3, c4, c5)
 }
 
-func rankHand(cards []card) int {
+func RankHand(cards []deck.Card) int {
 	var hand [5]uint32
 	for i, c := range cards {
 		var cardBin uint32
-		cardBin = uint32(primes[c.rank]) | (uint32(c.rank << 8)) | (1 << (15 - uint32(c.suit))) | (1 << (16 + uint32(c.rank)))
+		cardBin = uint32(primes[c.Rank]) | (uint32(c.Rank << 8)) | (1 << (15 - uint32(c.Suit))) | (1 << (16 + uint32(c.Rank)))
 		hand[i] = cardBin
 	}
 	return int(eval_5hand(hand[:]))
 }
 
-func compare(hand1 []card, hand2 []card) int {
-	if rankHand(hand1) < rankHand(hand2) {
+func Compare(hand1 []deck.Card, hand2 []deck.Card) int {
+	if RankHand(hand1) < RankHand(hand2) {
 		return 1
-	} else if rankHand(hand1) > rankHand(hand2) {
+	} else if RankHand(hand1) > RankHand(hand2) {
 		return -1
 	} else {
 		return 0

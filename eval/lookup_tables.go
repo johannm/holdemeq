@@ -1,4 +1,4 @@
-package main
+package eval
 
 /*
  * This is a table lookup for all "flush" hands (e.g.  both
@@ -1937,7 +1937,7 @@ var values = [...]uint16{
  */
 var primes = [...]int{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41}
 
-var perm7 = [21][5]int{
+var Perm7 = [21][5]int{
 	{0, 1, 2, 3, 4},
 	{0, 1, 2, 3, 5},
 	{0, 1, 2, 3, 6},
