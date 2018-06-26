@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/johannm/pokereq/eval"
 	"github.com/johannm/pokereq/deck"
+	"github.com/johannm/pokereq/eval"
 )
 
 func parseHand(s string) []deck.Card {
@@ -106,15 +106,19 @@ func main() {
 
 	for i := 0; i < n; i++ {
 		d := deck.CreateDeck()
-		deck.Shuffle(d, r1)
-		
+		d.Shuffle(r1)
+
 		// Remove holecards from deck
 		for _, c := range append(hand1, hand2...) {
-			d = deck.Remove(c, d)
+			d.Remove(c)
 		}
 
 		// Deal out the rest of the cards
-		dealtBoard := append(board, d[0:5-len(board)]...)
+		var dealtBoard []deck.Card
+		copy(dealtBoard, board)
+		for i := 0; i < 5-len(board); i++ {
+			dealtBoard = append(dealtBoard, d.DealOne())
+		}
 
 		maxhand1 := findMaxhand(append(hand1, dealtBoard...))
 		maxhand2 := findMaxhand(append(hand2, dealtBoard...))
