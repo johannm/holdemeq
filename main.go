@@ -56,8 +56,6 @@ func main() {
 			d.Remove(c)
 		}
 
-		//fmt.Printf("len deck: %v\n", d.Len())
-
 		// Deal out the rest of the cards
 		dealtBoard := make([]deck.Card, len(board))
 		copy(dealtBoard, board)
