@@ -29,9 +29,7 @@ func CreateDeck() Deck {
 func (d *Deck) Shuffle(r *rand.Rand) {
 	for i := 0; i < len(d.cards)-1; i++ {
 		j := r.Intn(len(d.cards)-i) + i
-		tmp := d.cards[j]
-		d.cards[j] = d.cards[i]
-		d.cards[i] = tmp
+		d.cards[i], d.cards[j] = d.cards[j], d.cards[i]
 	}
 }
 
@@ -49,7 +47,7 @@ func (d *Deck) Remove(card Card) {
 	}
 }
 
-func (d *Deck) Len() int {
+func (d Deck) Len() int {
 	return len(d.cards)
 }
 
