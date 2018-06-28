@@ -54,3 +54,26 @@ func TestRemove(t *testing.T) {
 		}
 	}
 }
+
+func TestParseStr(t *testing.T) {
+	s := "8h9h2c"
+	cards := []Card{Card{Rank:6, Suit: 2}, Card{Rank:7, Suit: 2}, Card{Rank:0, Suit: 0}}
+	if res := ParseStr(s); !reflect.DeepEqual(res, cards) {
+		t.Errorf("Expected value of %v, but was %v instead.", cards, res)
+	}
+}
+
+func TestCardToStr(t *testing.T) {
+	card := Card{Rank: 0, Suit: 0}
+	if res := card.ToStr(); res != "2c" {
+		t.Errorf("Expected value of %v, but was %v instead.", "2s", res)
+	}
+}
+
+func TestDeckToStr(t *testing.T) {
+	deckStr := "2c3d4h5s6c7d8h9sTcJdQhKsAc2d3h4s5c6d7h8s9cTdJhQsKcAd2h3s4c5d6h7s8c9dThJsQcKdAh2s3c4d5h6s7c8d9hTsJcQdKhAs"
+	d := CreateDeck()
+	if res := d.ToStr(); res != deckStr {
+		t.Errorf("Expected value of %v, but was %v instead.", deckStr, res)
+	}
+}
