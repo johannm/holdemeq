@@ -12,7 +12,7 @@ const TWO_PAIR = 7
 const ONE_PAIR = 8
 const HIGH_CARD = 9
 
-var value_str = [...]string{
+var value_str = []string{
 	"",
 	"Straight Flush",
 	"Four of a Kind",
