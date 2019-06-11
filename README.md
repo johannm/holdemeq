@@ -2,7 +2,11 @@
 
 2-handed Texas holdem hand equity calculator
 
-# Usage
+## Installation
+
+go build
+
+## Usage
 
 Calculate equity for 2 hands:
 
