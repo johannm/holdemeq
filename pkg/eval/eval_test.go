@@ -1,23 +1,43 @@
 package eval
 
-import  (
+import (
+	"reflect"
 	"testing"
-	"github.com/johannm/pokereq/deck"
 )
 
 var (
-	strflush   = []deck.Card{deck.Card{Rank: 12, Suit: 0}, deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}}
-	quads      = []deck.Card{deck.Card{Rank: 12, Suit: 0}, deck.Card{Rank: 12, Suit: 1}, deck.Card{Rank: 12, Suit: 2}, deck.Card{Rank: 12, Suit: 3}, deck.Card{Rank: 11, Suit: 0}}
-	boat       = []deck.Card{deck.Card{Rank: 12, Suit: 0}, deck.Card{Rank: 12, Suit: 1}, deck.Card{Rank: 12, Suit: 2}, deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 11, Suit: 1}}
-	flush      = []deck.Card{deck.Card{Rank: 12, Suit: 0}, deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 7, Suit: 0}}
-	straight   = []deck.Card{deck.Card{Rank: 12, Suit: 1}, deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}}
-	trips      = []deck.Card{deck.Card{Rank: 12, Suit: 0}, deck.Card{Rank: 12, Suit: 1}, deck.Card{Rank: 12, Suit: 2}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 5, Suit: 0}}
-	twopair    = []deck.Card{deck.Card{Rank: 12, Suit: 0}, deck.Card{Rank: 12, Suit: 1}, deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 10, Suit: 0}}
-	onepair    = []deck.Card{deck.Card{Rank: 12, Suit: 0}, deck.Card{Rank: 12, Suit: 1}, deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}}
-	hicard     = []deck.Card{deck.Card{Rank: 12, Suit: 1}, deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 7, Suit: 0}}
-	wheel      = []deck.Card{deck.Card{Rank: 12, Suit: 1}, deck.Card{Rank: 0, Suit: 0}, deck.Card{Rank: 1, Suit: 0}, deck.Card{Rank: 2, Suit: 0}, deck.Card{Rank: 3, Suit: 0}}
-	steelwheel = []deck.Card{deck.Card{Rank: 12, Suit: 0}, deck.Card{Rank: 0, Suit: 0}, deck.Card{Rank: 1, Suit: 0}, deck.Card{Rank: 2, Suit: 0}, deck.Card{Rank: 3, Suit: 0}}
+	strflush   = []Card{{Rank: 12, Suit: 0}, {Rank: 11, Suit: 0}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}}
+	quads      = []Card{{Rank: 12, Suit: 0}, {Rank: 12, Suit: 1}, {Rank: 12, Suit: 2}, {Rank: 12, Suit: 3}, {Rank: 11, Suit: 0}}
+	boat       = []Card{{Rank: 12, Suit: 0}, {Rank: 12, Suit: 1}, {Rank: 12, Suit: 2}, {Rank: 11, Suit: 0}, {Rank: 11, Suit: 1}}
+	flush      = []Card{{Rank: 12, Suit: 0}, {Rank: 11, Suit: 0}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 7, Suit: 0}}
+	straight   = []Card{{Rank: 12, Suit: 1}, {Rank: 11, Suit: 0}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}}
+	trips      = []Card{{Rank: 12, Suit: 0}, {Rank: 12, Suit: 1}, {Rank: 12, Suit: 2}, {Rank: 9, Suit: 0}, {Rank: 5, Suit: 0}}
+	twopair    = []Card{{Rank: 12, Suit: 0}, {Rank: 12, Suit: 1}, {Rank: 11, Suit: 0}, {Rank: 11, Suit: 1}, {Rank: 10, Suit: 0}}
+	onepair    = []Card{{Rank: 12, Suit: 0}, {Rank: 12, Suit: 1}, {Rank: 11, Suit: 0}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}}
+	hicard     = []Card{{Rank: 12, Suit: 1}, {Rank: 11, Suit: 0}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 7, Suit: 0}}
+	wheel      = []Card{{Rank: 12, Suit: 1}, {Rank: 0, Suit: 0}, {Rank: 1, Suit: 0}, {Rank: 2, Suit: 0}, {Rank: 3, Suit: 0}}
+	steelwheel = []Card{{Rank: 12, Suit: 0}, {Rank: 0, Suit: 0}, {Rank: 1, Suit: 0}, {Rank: 2, Suit: 0}, {Rank: 3, Suit: 0}}
 )
+
+func TestMaxHand(t *testing.T) {
+	seven := []Card{
+		{Rank: 12, Suit: 0},
+		{Rank: 11, Suit: 0},
+		{Rank: 10, Suit: 0},
+		{Rank: 10, Suit: 1},
+		{Rank: 10, Suit: 2},
+		{Rank: 9, Suit: 0},
+		{Rank: 8, Suit: 0}}
+	best5 := []Card{
+		{Rank: 12, Suit: 0},
+		{Rank: 11, Suit: 0},
+		{Rank: 10, Suit: 0},
+		{Rank: 9, Suit: 0},
+		{Rank: 8, Suit: 0}}
+	if res := findMaxhand(seven); !reflect.DeepEqual(res, best5) {
+		t.Errorf("Expected value of %v, but was %v instead.", best5, res)
+	}
+}
 
 func TestRankStraight(t *testing.T) {
 	t.Logf("Testing rank of %v", straight)
@@ -147,7 +167,7 @@ func TestOnepairBeatsHicard(t *testing.T) {
 }
 
 func TestStraightBeatsWheel(t *testing.T) {
-	straight := []deck.Card{deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}, deck.Card{Rank: 7, Suit: 0}}
+	straight := []Card{{Rank: 11, Suit: 1}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}, {Rank: 7, Suit: 0}}
 	if res := Compare(straight, wheel); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
 	}
@@ -166,7 +186,7 @@ func TestWheelBeatsTrips(t *testing.T) {
 }
 
 func TestStraightflushBeatsSteelwheel(t *testing.T) {
-	strflush := []deck.Card{deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}, deck.Card{Rank: 7, Suit: 0}}
+	strflush := []Card{{Rank: 11, Suit: 0}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}, {Rank: 7, Suit: 0}}
 	if res := Compare(strflush, steelwheel); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
 	}
@@ -185,7 +205,7 @@ func TestSteelwheelBeatsQuads(t *testing.T) {
 }
 
 func TestStraightFlushVsStraightFlush(t *testing.T) {
-	strflush2 := []deck.Card{deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}, deck.Card{Rank: 7, Suit: 0}}
+	strflush2 := []Card{{Rank: 11, Suit: 0}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}, {Rank: 7, Suit: 0}}
 
 	if res := Compare(strflush, strflush2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
@@ -199,7 +219,7 @@ func TestStraightFlushVsStraightFlush(t *testing.T) {
 }
 
 func TestQuadsVsQuads(t *testing.T) {
-	quads2 := []deck.Card{deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 11, Suit: 2}, deck.Card{Rank: 11, Suit: 3}, deck.Card{Rank: 10, Suit: 0}}
+	quads2 := []Card{{Rank: 11, Suit: 0}, {Rank: 11, Suit: 1}, {Rank: 11, Suit: 2}, {Rank: 11, Suit: 3}, {Rank: 10, Suit: 0}}
 
 	if res := Compare(quads, quads2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
@@ -213,7 +233,7 @@ func TestQuadsVsQuads(t *testing.T) {
 }
 
 func TestBoatVsBoat(t *testing.T) {
-	boat2 := []deck.Card{deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 11, Suit: 2}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 10, Suit: 1}}
+	boat2 := []Card{{Rank: 11, Suit: 0}, {Rank: 11, Suit: 1}, {Rank: 11, Suit: 2}, {Rank: 10, Suit: 0}, {Rank: 10, Suit: 1}}
 
 	if res := Compare(boat, boat2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
@@ -227,7 +247,7 @@ func TestBoatVsBoat(t *testing.T) {
 }
 
 func TestFlushVsFlush(t *testing.T) {
-	flush2 := []deck.Card{deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}, deck.Card{Rank: 6, Suit: 0}}
+	flush2 := []Card{{Rank: 11, Suit: 0}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}, {Rank: 6, Suit: 0}}
 
 	if res := Compare(flush, flush2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
@@ -241,7 +261,7 @@ func TestFlushVsFlush(t *testing.T) {
 }
 
 func TestStraightVsStraight(t *testing.T) {
-	straight2 := []deck.Card{deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}, deck.Card{Rank: 7, Suit: 0}}
+	straight2 := []Card{{Rank: 11, Suit: 1}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}, {Rank: 7, Suit: 0}}
 
 	if res := Compare(straight, straight2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
@@ -255,7 +275,7 @@ func TestStraightVsStraight(t *testing.T) {
 }
 
 func TestTripsVsTrips(t *testing.T) {
-	trips2 := []deck.Card{deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 11, Suit: 2}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 5, Suit: 0}}
+	trips2 := []Card{{Rank: 11, Suit: 0}, {Rank: 11, Suit: 1}, {Rank: 11, Suit: 2}, {Rank: 9, Suit: 0}, {Rank: 5, Suit: 0}}
 
 	if res := Compare(trips, trips2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
@@ -269,7 +289,7 @@ func TestTripsVsTrips(t *testing.T) {
 }
 
 func TestTwopairVsTwopair(t *testing.T) {
-	twopair2 := []deck.Card{deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 10, Suit: 1}, deck.Card{Rank: 9, Suit: 0}}
+	twopair2 := []Card{{Rank: 11, Suit: 0}, {Rank: 11, Suit: 1}, {Rank: 10, Suit: 0}, {Rank: 10, Suit: 1}, {Rank: 9, Suit: 0}}
 
 	if res := Compare(twopair, twopair2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
@@ -283,7 +303,7 @@ func TestTwopairVsTwopair(t *testing.T) {
 }
 
 func TestOnepairVsOnepair(t *testing.T) {
-	onepair2 := []deck.Card{deck.Card{Rank: 11, Suit: 0}, deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}}
+	onepair2 := []Card{{Rank: 11, Suit: 0}, {Rank: 11, Suit: 1}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}}
 
 	if res := Compare(onepair, onepair2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
@@ -297,7 +317,7 @@ func TestOnepairVsOnepair(t *testing.T) {
 }
 
 func TestHicardVsHicard(t *testing.T) {
-	hicard2 := []deck.Card{deck.Card{Rank: 11, Suit: 1}, deck.Card{Rank: 10, Suit: 0}, deck.Card{Rank: 9, Suit: 0}, deck.Card{Rank: 8, Suit: 0}, deck.Card{Rank: 6, Suit: 0}}
+	hicard2 := []Card{{Rank: 11, Suit: 1}, {Rank: 10, Suit: 0}, {Rank: 9, Suit: 0}, {Rank: 8, Suit: 0}, {Rank: 6, Suit: 0}}
 
 	if res := Compare(hicard, hicard2); res != 1 {
 		t.Errorf("Expected value of 1, but was %d instead.", res)
