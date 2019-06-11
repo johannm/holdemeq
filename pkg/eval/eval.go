@@ -5,68 +5,68 @@ import (
 	"time"
 )
 
-const StraightFlush = 1
-const FourOfAKind = 2
-const FullHouse = 3
-const Flush = 4
-const Straight = 5
-const ThreeOfAKind = 6
-const TwoPair = 7
-const OnePair = 8
-const HighCard = 9
+const straightFlush = 1
+const fourOfAKind = 2
+const fullHouse = 3
+const flush = 4
+const straight = 5
+const threeOfAKind = 6
+const twoPair = 7
+const onePair = 8
+const highCard = 9
 
 var value_str = []string{
 	"",
-	"Straight Flush",
+	"straight flush",
 	"Four of a Kind",
 	"Full House",
-	"Flush",
-	"Straight",
+	"flush",
+	"straight",
 	"Three of a Kind",
 	"Two Pair",
 	"One Pair",
 	"High Card"}
 
-const Deuce = 0
-const Trey = 1
-const Four = 2
-const Five = 3
-const Six = 4
-const Seven = 5
-const Eight = 6
-const Nine = 7
-const Ten = 8
-const Jack = 9
-const Queen = 10
-const King = 11
-const Ace = 12
+const deuce = 0
+const trey = 1
+const four = 2
+const five = 3
+const six = 4
+const seven = 5
+const eight = 6
+const nine = 7
+const ten = 8
+const jack = 9
+const queen = 10
+const king = 11
+const ace = 12
 
 func hand_rank(val uint16) int {
 	if val > 6185 {
-		return HighCard // 1277 high card
+		return highCard // 1277 high card
 	}
 	if val > 3325 {
-		return OnePair // 2860 one pair
+		return onePair // 2860 one pair
 	}
 	if val > 2467 {
-		return TwoPair // 858 two pair
+		return twoPair // 858 two pair
 	}
 	if val > 1609 {
-		return ThreeOfAKind // 858 three-kind
+		return threeOfAKind // 858 three-kind
 	}
 	if val > 1599 {
-		return Straight // 10 straights
+		return straight // 10 straights
 	}
 	if val > 322 {
-		return Flush // 1277 flushes
+		return flush // 1277 flushes
 	}
 	if val > 166 {
-		return FullHouse // 156 full house
+		return fullHouse // 156 full house
 	}
 	if val > 10 {
-		return FourOfAKind // 156 four-kind
+		return fourOfAKind // 156 four-kind
 	}
-	return StraightFlush // 10 straight-flushes
+	return straightFlush // 10 straight-flushes
 }
 
 func CalculateHoldemEquity(hand1, hand2, board []Card, n int) (int, int, int) {
@@ -94,7 +94,7 @@ func CalculateHoldemEquity(hand1, hand2, board []Card, n int) (int, int, int) {
 		maxhand1 := findMaxhand(append(hand1, dealtBoard...))
 		maxhand2 := findMaxhand(append(hand2, dealtBoard...))
 
-		won := Compare(maxhand1, maxhand2)
+		won := compare(maxhand1, maxhand2)
 		if won > 0 {
 			win++
 		} else if won < 0 {
@@ -106,7 +106,6 @@ func CalculateHoldemEquity(hand1, hand2, board []Card, n int) (int, int, int) {
 	return win, lose, draw
 }
 
-
 func findMaxhand(cards []Card) []Card {
 	hand := make([]Card, 5)
 	maxHand := make([]Card, 5)
@@ -115,7 +114,7 @@ func findMaxhand(cards []Card) []Card {
 		for i, cardIndex := range combo {
 			hand[i] = cards[cardIndex]
 		}
-		r := RankHand(hand)
+		r := rankHand(hand)
 		if r < bestRank {
 			bestRank = r
 			copy(maxHand, hand)
@@ -151,7 +150,7 @@ func eval_5cards(c1, c2, c3, c4, c5 uint32) uint16 {
 		return flushes[q]
 	}
 
-	// check for Straights and HighCard hands
+	// check for Straights and highCard hands
 	s = unique5[q]
 	if s != 0 {
 		return s
@@ -176,7 +175,7 @@ func eval_5hand(hand []uint32) uint16 {
 	return eval_5cards(c1, c2, c3, c4, c5)
 }
 
-func RankHand(cards []Card) int {
+func rankHand(cards []Card) int {
 	var hand [5]uint32
 	for i, c := range cards {
 		var cardBin uint32
@@ -186,10 +185,10 @@ func RankHand(cards []Card) int {
 	return int(eval_5hand(hand[:]))
 }
 
-func Compare(hand1 []Card, hand2 []Card) int {
-	if RankHand(hand1) < RankHand(hand2) {
+func compare(hand1 []Card, hand2 []Card) int {
+	if rankHand(hand1) < rankHand(hand2) {
 		return 1
-	} else if RankHand(hand1) > RankHand(hand2) {
+	} else if rankHand(hand1) > rankHand(hand2) {
 		return -1
 	} else {
 		return 0
