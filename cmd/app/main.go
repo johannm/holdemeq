@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if len(os.Args) < 3 {
-		fmt.Println("Usage: holdemeq.exe AsKd QhQc JhTh9h")
+		fmt.Println("Usage: app.exe AsKd QhQc JhTh9h")
 		os.Exit(0)
 	}
 

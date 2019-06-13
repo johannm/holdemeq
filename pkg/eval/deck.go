@@ -64,7 +64,7 @@ func parseCard(s string) Card {
 	return c
 }
 
-func (c *Card) toStr() string {
+func (c *Card) ToStr() string {
 	var rank, suit rune
 	switch c.Rank {
 	case 12:
@@ -150,7 +150,7 @@ func (d deck) len() int {
 func (d *deck) toStr() string {
 	var s string
 	for _, c := range d.cards {
-		s += c.toStr()
+		s += c.ToStr()
 	}
 	return s
 }
